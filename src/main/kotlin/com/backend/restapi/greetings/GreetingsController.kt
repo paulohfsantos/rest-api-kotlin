@@ -1,4 +1,4 @@
-package com.backend.restapi
+package com.backend.restapi.greetings
 
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RequestParam
