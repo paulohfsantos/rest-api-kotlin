@@ -22,6 +22,7 @@ class PersonController {
     @Autowired
     private lateinit var service: PersonService
 
+    /*
     @GetMapping(
         value = ["/{id}"],
         produces = [MediaType.APPLICATION_JSON_VALUE]
@@ -60,4 +61,6 @@ class PersonController {
 
         return ResponseEntity.noContent().build<Any>()
     }
+
+    */
 }
