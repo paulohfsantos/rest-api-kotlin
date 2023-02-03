@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.PutMapping
 import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestMapping
+import org.springframework.web.bind.annotation.RequestParam
 import org.springframework.web.bind.annotation.RestController
 
 @RestController
@@ -22,7 +23,6 @@ class PersonController {
     @Autowired
     private lateinit var service: PersonService
 
-    /*
     @GetMapping(
         value = ["/{id}"],
         produces = [MediaType.APPLICATION_JSON_VALUE]
@@ -34,6 +34,15 @@ class PersonController {
     @GetMapping(produces = [MediaType.APPLICATION_JSON_VALUE])
     fun getPersonList(): List<PersonVO> {
         return service.findAll()
+    }
+
+    @GetMapping
+    fun filterPersonList(
+        @RequestParam(value = "firstName", defaultValue = "") firstName: String,
+        @RequestParam(value = "lastName", defaultValue = "") lastName: String,
+        @RequestParam(value = "gender", defaultValue = "") gender: String
+    ): List<PersonVO> {
+        return service.filter(firstName, lastName, gender)
     }
 
     @PostMapping(
@@ -61,6 +70,4 @@ class PersonController {
 
         return ResponseEntity.noContent().build<Any>()
     }
-
-    */
 }

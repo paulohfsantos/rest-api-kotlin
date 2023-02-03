@@ -1,6 +1,8 @@
 package com.backend.restapi.services
 
+import com.backend.restapi.data.vo.v1.PersonVO
 import com.backend.restapi.exception.ResourceNotFoundException
+import com.backend.restapi.mapper.Dozermapper
 import com.backend.restapi.model.Person
 import com.backend.restapi.repository.PersonRepository
 import org.springframework.beans.factory.annotation.Autowired
@@ -14,25 +16,34 @@ class PersonService {
     private lateinit var repository: PersonRepository
     private val logger = Logger.getLogger(PersonService::class.java.name)
 
-    fun findById(id: Long): Person {
+    fun filterPerson(firstName: String, lastName: String, gender: String): List<PersonVO> {
+        // TODO: implement filter
+    }
+
+    fun findById(id: Long): PersonVO {
         logger.info("finding a person")
 
-        return repository.findById(id)
+        val person = repository.findById(id)
             .orElseThrow{ ResourceNotFoundException("Person not found") }
+
+        return Dozermapper.parseObject(person, PersonVO::class.java)
     }
 
-    fun findAll(): List<Person> {
+    fun findAll(): List<PersonVO> {
         logger.info("person list")
 
-        return repository.findAll()
+        val personList = repository.findAll()
+        return Dozermapper.parseListObject(personList, PersonVO::class.java)
     }
 
-    fun createPerson(person: Person): Person {
+    fun createPerson(person: PersonVO): PersonVO {
         logger.info("creating person -> ${person.firstName}")
-        return repository.save(person)
+
+        var entity: Person = Dozermapper.parseObject(person, Person::class.java)
+        return Dozermapper.parseObject(repository.save(entity), PersonVO::class.java)
     }
 
-    fun updatePerson(person: Person): Person {
+    fun updatePerson(person: PersonVO): PersonVO {
         val entity = repository.findById(person.id)
             .orElseThrow{ ResourceNotFoundException("Person not found") }
 
@@ -43,7 +54,7 @@ class PersonService {
 
         logger.info("updating person -> ${entity.id}")
 
-        return repository.save(entity)
+        return Dozermapper.parseObject(repository.save(entity), PersonVO::class.java)
     }
 
     fun deletePerson(id: Long) {
